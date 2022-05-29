@@ -13,17 +13,18 @@ class PickImage extends StatefulWidget {
 }
 
 class _PickImageState extends State<PickImage> {
-  File? image;
+  File? imageTemp;
   Future pickImages() async {
-    // print("Pressed");
-    final image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (image == null) return;
-
-    final imageTemp = File(image.path);
-
-    setState(() {
-      this.image = imageTemp;
-    });
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemporary = File(image.path);
+      setState(() {
+        imageTemp = imageTemporary;
+      });
+    } catch (error) {
+      print("error: $error");
+    }
   }
 
   @override
@@ -35,8 +36,8 @@ class _PickImageState extends State<PickImage> {
           child: SizedBox(
             height: 200,
             width: 200,
-            child: image != null
-                ? Image.file(image!)
+            child: imageTemp != null
+                ? Image.file(imageTemp!)
                 : Column(
                     children: [
                       const Padding(
